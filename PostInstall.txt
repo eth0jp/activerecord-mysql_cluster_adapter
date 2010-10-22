@@ -1,0 +1,7 @@
+
+For more information on activerecord-mysql_cluster_adapter, see http://activerecord-mysql_cluster_adapter.rubyforge.org
+
+NOTE: Change this information in PostInstall.txt 
+You can also delete it if you don't want it.
+
+
