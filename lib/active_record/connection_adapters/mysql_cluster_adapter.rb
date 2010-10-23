@@ -95,7 +95,7 @@ module ActiveRecord
               return node
             else
               # async connect
-              node.reconnect!
+              node.reconnect! rescue false
             end
             i += 1
           end
@@ -231,8 +231,8 @@ module ActiveRecord
 
             # ActiveRecord::StatementInvalid
             @connected = false if @connected && e.to_s.index('MySQL server has gone away')
-            @connected = false if @connected && e.to_s.index('Lost connection to MySQL server during query')
-            @connected = false if @connected && e.to_s =~ /Got error .+ from NDBCLUSTER\:/
+            @connected = false if @connected && e.to_s.index("Lost connection to MySQL server during query")
+            @connected = false if @connected && e.to_s.index(" from NDBCLUSTER: ")
 
             # active?
             @connected = false if @connected && (!@connection.active? rescue false)
@@ -251,27 +251,31 @@ module ActiveRecord
 end
 
 
-=begin
-module ActionController
-  class Base
-    alias process_org_mysql_cluster_adapter process
 
-    def process(request, response, method = :perform_action, *arguments)
-      ActiveRecord::ConnectionAdapters::MysqlClusterAdapter.initialize_request
-      send :process_org_mysql_cluster_adapter, request, response, method, *arguments
+# for passenger
+if defined? PhusionPassenger::Rack::RequestHandler
+  module PhusionPassenger
+    module Rack
+      class RequestHandler
+        alias process_request_org_mysql_cluster_adapter process_request
+
+        def process_request(env, input, output)
+          ActiveRecord::ConnectionAdapters::MysqlClusterAdapter.initialize_request
+          send :process_request_org_mysql_cluster_adapter, env, input, output
+        end
+      end
     end
   end
-end
-=end
 
-module PhusionPassenger
-  module Rack
-    class RequestHandler
-      alias process_request_org_mysql_cluster_adapter process_request
+# for ./script/server
+else
+  module ActionController
+    class Base
+      alias process_org_mysql_cluster_adapter process
 
-      def process_request(env, input, output)
+      def process(request, response, method = :perform_action, *arguments)
         ActiveRecord::ConnectionAdapters::MysqlClusterAdapter.initialize_request
-        send :process_request_org_mysql_cluster_adapter, env, input, output
+        send :process_org_mysql_cluster_adapter, request, response, method, *arguments
       end
     end
   end
