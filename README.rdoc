@@ -7,6 +7,13 @@
 Database connection adapter for MySQL Cluster.
 All nodes are readable and writable.
 
+== DEPENDENCY:
+
+Tested version:
+
+* Ruby 1.8.5
+* ActiveRecord 2.3.5
+
 == FEATURES/PROBLEMS:
 
 * FIX (list of features or problems)
@@ -23,12 +30,16 @@ All nodes are readable and writable.
 
   ./script/plugin install git://github.com/eth0jp/activerecord-mysql_cluster_adapter.git
 
-== CONFIG EXAMPLE
+== CONFIG EXAMPLE:
 
 Put a config file at config/database.yml
 
-retry: Number of seconds until try to reconnecting to disconnected node. default is 60.
-nodes: Information on nodes.
+=== Parameters:
+
+* retry: Number of seconds until try reconnecting to disconnected node. default is 60.
+* nodes: Information on mysql nodes.
+
+=== config/database.yml
 
   production:
     adapter: mysql_cluster
