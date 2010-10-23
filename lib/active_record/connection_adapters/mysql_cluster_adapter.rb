@@ -108,10 +108,10 @@ module ActiveRecord
           @config = config
         end
 
-        def connect
+        def reconnect!
           begin
             if @connection
-              @connection.connect!
+              @connection.reconnect!
             else
               host     = @config[:host]
               port     = @config[:port]
@@ -137,13 +137,6 @@ module ActiveRecord
             MysqlClusterAdapter.logger.warn "MysqlClusterAdapter::Node connection error: #{@config[:host]}:#{@config[:port]}"
             false
           end
-        end
-
-        def reconnect!
-          if @connection
-            @connection.disconnect!
-          end
-          connect
         end
 
         def active?
