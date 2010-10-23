@@ -1,10 +1,11 @@
 = activerecord-mysql_cluster_adapter
 
-* http://github.com/#{github_username}/#{project_name}
+* http://github.com/eth0jp/activerecord-mysql_cluster_adapter
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Database connection adapter for MySQL Cluster.
+All nodes are readable and writable.
 
 == FEATURES/PROBLEMS:
 
@@ -20,7 +21,45 @@ FIX (describe your package)
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+  ./script/plugin install git://github.com/eth0jp/activerecord-mysql_cluster_adapter.git
+
+== CONFIG EXAMPLE
+
+Put a config file at config/database.yml
+
+retry: Number of seconds until try to reconnecting to disconnected node. default is 60.
+nodes: Information on nodes.
+
+  production:
+    adapter: mysql_cluster
+    retry: 60
+    nodes:
+      - database: clusterdb
+        host: 192.168.1.10
+        username: root
+        password: pass
+        encoding: utf8
+      - database: clusterdb
+        host: 192.168.1.20
+        username: root
+        password: pass
+        encoding: utf8
+ 
+  development:
+    adapter: mysql_cluster
+    nodes:
+      - database: clusterdb_dev
+        host: 192.168.1.10
+        username: root
+        password: pass
+        encoding: utf8
+        retry: 60
+      - database: clusterdb_dev
+        host: 192.168.1.20
+        username: root
+        password: pass
+        encoding: utf8
+        retry: 60
 
 == LICENSE:
 
