@@ -24,6 +24,8 @@ module ActiveRecord
 
   module ConnectionAdapters
     class MysqlClusterAdapter
+      VERSION = '0.0.1'
+
       @@logger = nil
       @@current = nil
       cattr_reader :logger
@@ -92,7 +94,7 @@ module ActiveRecord
             i += 1
           end
 
-          raise 'MysqlClusterAdapter::Pool: Nodes ZENMETSU!!'
+          raise Mysql::Error.new("MysqlClusterAdapter::Pool: All nodes are down!!")
         end
       end
 
